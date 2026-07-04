@@ -11,6 +11,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+LOGIN_URL = "/accounts/login/"
+LOGIN_REDIRECT_URL = "/dashboard/student/"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -94,6 +97,3 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-LOGIN_REDIRECT_URL = "/dashboard/student/"
-LOGOUT_REDIRECT_URL = "/accounts/login/"

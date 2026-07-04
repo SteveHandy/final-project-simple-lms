@@ -1,304 +1,276 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Student Dashboard</title>
+{% extends "dashboard/base_dashboard.html" %}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+{% block title %}
+Student Dashboard
+{% endblock %}
 
-        body {
-            margin: 0;
-            background: #f4f6f8;
-            color: #1f2937;
-        }
+{% block topbar %}
+<h1>Student Dashboard</h1>
+<p>Ringkasan aktivitas belajar, kelas, wishlist, dan progress kamu.</p>
+{% endblock %}
 
-        .navbar {
-            background: #111827;
-            color: white;
-            padding: 20px 40px;
-        }
+{% block content %}
 
-        .navbar h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .navbar p {
-            margin: 6px 0 0;
-            color: #d1d5db;
-        }
-
-        .container {
-            padding: 30px 40px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .card-title {
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .card-value {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .section {
-            margin-top: 30px;
-        }
-
-        .section h2 {
-            margin-bottom: 16px;
-        }
-
-        .course-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .course-card {
-            background: white;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .course-body {
-            padding: 20px;
-        }
-
-        .course-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .course-meta {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 12px;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #e5e7eb;
-            padding: 5px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            margin-right: 5px;
-        }
-
-        .progress-wrapper {
-            background: #e5e7eb;
-            border-radius: 999px;
-            height: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-
-        .progress-bar {
-            background: #2563eb;
-            height: 100%;
-        }
-
-        .progress-text {
-            margin-top: 8px;
-            font-size: 14px;
-            color: #374151;
-        }
-
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .list-item {
-            border-bottom: 1px solid #e5e7eb;
-            padding: 12px 0;
-        }
-
-        .list-item:last-child {
-            border-bottom: none;
-        }
-
-        .empty {
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .logout {
-            color: #93c5fd;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        @media (max-width: 900px) {
-            .stats,
-            .course-grid,
-            .two-column {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="navbar">
-    <h1>Student Dashboard</h1>
-    <p>
-        Halo, {{ request.user.username }} |
-        <a class="logout" href="/accounts/logout/">Logout</a>
-    </p>
-</div>
-
-<div class="container">
-
-    <div class="stats">
-        <div class="card">
-            <div class="card-title">Course Diikuti</div>
-            <div class="card-value">{{ total_courses }}</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Total Lesson</div>
-            <div class="card-value">{{ total_lessons }}</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Lesson Selesai</div>
-            <div class="card-value">{{ completed_lessons }}</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Rata-rata Progress</div>
-            <div class="card-value">{{ average_progress }}%</div>
-        </div>
+<div class="stats">
+    <div class="card">
+        <div class="card-title">Kelas Diikuti</div>
+        <div class="card-value">{{ total_courses }}</div>
     </div>
 
-    <div class="section">
-        <h2>Course Saya</h2>
+    <div class="card">
+        <div class="card-title">Total Lesson</div>
+        <div class="card-value">{{ total_lessons }}</div>
+    </div>
 
-        <div class="course-grid">
-            {% for course in enrolled_courses %}
-                <div class="course-card">
-                    <div class="course-body">
-                        <div class="course-title">
-                            {{ course.course_name }}
-                        </div>
+    <div class="card">
+        <div class="card-title">Lesson Selesai</div>
+        <div class="card-value">{{ completed_lessons }}</div>
+    </div>
 
-                        <div class="course-meta">
-                            Pengajar: {{ course.teacher_name }}
-                        </div>
+    <div class="card">
+        <div class="card-title">Rata-rata Progress</div>
+        <div class="card-value">{{ average_progress }}%</div>
+    </div>
+</div>
 
-                        <p>
-                            {{ course.description }}
-                        </p>
+<div class="stats">
+    <div class="card">
+        <div class="card-title">Belum Selesai</div>
+        <div class="card-value">{{ not_completed_lessons }}</div>
+    </div>
 
-                        <div>
-                            <span class="badge">{{ course.category_name }}</span>
-                            <span class="badge">{{ course.level }}</span>
-                            <span class="badge">{{ course.status }}</span>
-                        </div>
+    <div class="card">
+        <div class="card-title">Wishlist</div>
+        <div class="card-value">{{ wishlist_count }}</div>
+    </div>
 
-                        <div class="progress-wrapper">
-                            <div
-                                class="progress-bar"
-                                style="width: {{ course.progress_percentage }}%;"
-                            ></div>
-                        </div>
+    <div class="card">
+        <div class="card-title">Review Dibuat</div>
+        <div class="card-value">{{ review_count }}</div>
+    </div>
 
-                        <div class="progress-text">
-                            {{ course.completed_lessons }} dari {{ course.total_lessons }} lesson selesai
-                            —
-                            {{ course.progress_percentage }}%
-                        </div>
+    <div class="card">
+        <div class="card-title">Status</div>
+        <div class="card-value">Aktif</div>
+    </div>
+</div>
+
+<div class="section" id="kelas-saya">
+    <div class="section-header">
+        <h2>Kelas Saya</h2>
+    </div>
+
+    <div class="grid-3">
+        {% for course in enrolled_courses %}
+            <div class="course-card">
+                <div class="course-image">
+                    {% if course.image %}
+                        <img src="{{ course.image }}" alt="{{ course.name }}">
+                    {% else %}
+                        Course Image
+                    {% endif %}
+                </div>
+
+                <div class="course-body">
+                    <div class="course-title">
+                        {{ course.name }}
                     </div>
+
+                    <div class="muted">
+                        Pengajar: {{ course.teacher }}
+                    </div>
+
+                    <p>
+                        {{ course.description|truncatewords:20 }}
+                    </p>
+
+                    <div>
+                        <span class="badge">{{ course.category }}</span>
+                        <span class="badge">{{ course.level }}</span>
+                        <span class="badge">{{ course.status }}</span>
+                    </div>
+
+                    <div class="progress-wrapper">
+                        <div
+                            class="progress-bar"
+                            style="width: {{ course.percentage }}%;"
+                        ></div>
+                    </div>
+
+                    <div class="progress-text">
+                        {{ course.completed_lessons }} / {{ course.total_lessons }} lesson selesai
+                        —
+                        {{ course.percentage }}%
+                    </div>
+
+                    <a
+                        href="{% url 'student_course_detail' course.id %}"
+                        class="button"
+                    >
+                        Lihat Detail Kelas
+                    </a>
                 </div>
-            {% empty %}
-                <p class="empty">Kamu belum mengikuti course apa pun.</p>
-            {% endfor %}
-        </div>
+            </div>
+        {% empty %}
+            <div class="card">
+                <p class="empty">
+                    Kamu belum mengikuti kelas apa pun.
+                </p>
+            </div>
+        {% endfor %}
     </div>
-
-    <div class="section two-column">
-
-        <div class="card">
-            <h2>Lesson Terakhir Diselesaikan</h2>
-
-            {% for item in recent_completed_lessons %}
-                <div class="list-item">
-                    <strong>{{ item.lesson.name }}</strong><br>
-                    <small>
-                        Course: {{ item.lesson.course_id.name }}
-                    </small><br>
-                    <small>
-                        Selesai pada: {{ item.completed_at }}
-                    </small>
-                </div>
-            {% empty %}
-                <p class="empty">Belum ada lesson yang selesai.</p>
-            {% endfor %}
-        </div>
-
-        <div class="card">
-            <h2>Wishlist</h2>
-
-            {% for item in wishlist_items %}
-                <div class="list-item">
-                    <strong>{{ item.course.name }}</strong><br>
-                    <small>
-                        Pengajar: {{ item.course.teacher.username }}
-                    </small><br>
-                    <small>
-                        Harga: Rp {{ item.course.price }}
-                    </small>
-                </div>
-            {% empty %}
-                <p class="empty">Wishlist masih kosong.</p>
-            {% endfor %}
-        </div>
-
-    </div>
-
-    <div class="section two-column">
-
-        <div class="card">
-            <div class="card-title">Wishlist</div>
-            <div class="card-value">{{ wishlist_count }}</div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Review Dibuat</div>
-            <div class="card-value">{{ review_count }}</div>
-        </div>
-
-    </div>
-
 </div>
 
-</body>
-</html>
+<div class="section grid-2">
+    <div class="card">
+        <h2>Lesson Terakhir Diselesaikan</h2>
+
+        {% for item in recent_completed_lessons %}
+            <div class="list-item">
+                <strong>{{ item.lesson.name }}</strong><br>
+                <span class="muted">
+                    Course: {{ item.lesson.course_id.name }}
+                </span><br>
+                <span class="muted">
+                    Selesai: {{ item.completed_at }}
+                </span>
+            </div>
+        {% empty %}
+            <p class="empty">
+                Belum ada lesson yang diselesaikan.
+            </p>
+        {% endfor %}
+    </div>
+
+    <div class="card" id="wishlist">
+        <h2>Wishlist Saya</h2>
+
+        {% for item in wishlist_items %}
+            <div class="list-item">
+                <strong>{{ item.course.name }}</strong><br>
+
+                <span class="muted">
+                    Pengajar: {{ item.course.teacher.username }}
+                </span><br>
+
+                <span class="muted">
+                    Harga: Rp {{ item.course.price }}
+                </span><br>
+
+                <form
+                    method="post"
+                    action="{% url 'dashboard_remove_wishlist' item.id %}"
+                    style="margin-top: 8px;"
+                >
+                    {% csrf_token %}
+                    <button class="button button-danger" type="submit">
+                        Hapus Wishlist
+                    </button>
+                </form>
+            </div>
+        {% empty %}
+            <p class="empty">
+                Wishlist masih kosong.
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section" id="review">
+    <div class="card">
+        <h2>Review Saya</h2>
+
+        {% for review in my_reviews %}
+            <div class="list-item">
+                <strong>{{ review.course.name }}</strong><br>
+
+                <span class="muted">
+                    Rating: {{ review.rating }}/5
+                </span>
+
+                <p>
+                    {{ review.review }}
+                </p>
+
+                <span class="muted">
+                    Dibuat: {{ review.created_at }}
+                </span>
+            </div>
+        {% empty %}
+            <p class="empty">
+                Kamu belum membuat review.
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section" id="course-tersedia">
+    <div class="section-header">
+        <h2>Course Tersedia</h2>
+    </div>
+
+    <div class="grid-3">
+        {% for course in available_courses %}
+            <div class="course-card">
+                <div class="course-image">
+                    {% if course.image %}
+                        <img src="{{ course.image.url }}" alt="{{ course.name }}">
+                    {% else %}
+                        Course Image
+                    {% endif %}
+                </div>
+
+                <div class="course-body">
+                    <div class="course-title">
+                        {{ course.name }}
+                    </div>
+
+                    <div class="muted">
+                        Pengajar: {{ course.teacher.username }}
+                    </div>
+
+                    <p>
+                        {{ course.description|truncatewords:18 }}
+                    </p>
+
+                    <div>
+                        <span class="badge">
+                            {% if course.category %}
+                                {{ course.category.name }}
+                            {% else %}
+                                Tanpa Kategori
+                            {% endif %}
+                        </span>
+
+                        <span class="badge">{{ course.level }}</span>
+                        <span class="badge">Rp {{ course.price }}</span>
+                    </div>
+
+                    {% if course.id in wishlist_course_ids %}
+                        <button class="button button-secondary" disabled>
+                            Sudah di Wishlist
+                        </button>
+                    {% else %}
+                        <form
+                            method="post"
+                            action="{% url 'dashboard_add_wishlist' course.id %}"
+                        >
+                            {% csrf_token %}
+                            <button class="button" type="submit">
+                                Tambah Wishlist
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="card">
+                <p class="empty">
+                    Belum ada course tersedia.
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

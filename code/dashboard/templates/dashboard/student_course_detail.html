@@ -1,0 +1,151 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block title %}
+Detail Kelas - {{ course.name }}
+{% endblock %}
+
+{% block topbar %}
+<h1>{{ course.name }}</h1>
+<p>
+    Pengajar: {{ course.teacher.username }}
+    |
+    Kategori:
+    {% if course.category %}
+        {{ course.category.name }}
+    {% else %}
+        Tanpa Kategori
+    {% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+
+<div class="stats">
+    <div class="card">
+        <div class="card-title">Total Lesson</div>
+        <div class="card-value">{{ total_lessons }}</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Selesai</div>
+        <div class="card-value">{{ completed_lessons }}</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Belum Selesai</div>
+        <div class="card-value">{{ not_completed_lessons }}</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Progress</div>
+        <div class="card-value">{{ percentage }}%</div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Progress Kelas</h2>
+
+    <div class="progress-wrapper">
+        <div
+            class="progress-bar"
+            style="width: {{ percentage }}%;"
+        ></div>
+    </div>
+
+    <div class="progress-text">
+        {{ completed_lessons }} dari {{ total_lessons }} lesson selesai.
+    </div>
+</div>
+
+<div class="section">
+    <div class="card">
+        <h2>Curriculum / Lesson</h2>
+
+        {% for lesson in lessons %}
+            <div class="lesson-item">
+                <div>
+                    <strong>
+                        {{ lesson.order }}. {{ lesson.name }}
+                    </strong>
+
+                    {% if lesson.parent %}
+                        <br>
+                        <span class="muted">
+                            Parent: {{ lesson.parent }}
+                        </span>
+                    {% endif %}
+
+                    <p>
+                        {{ lesson.description }}
+                    </p>
+
+                    {% if lesson.video_url %}
+                        <a href="{{ lesson.video_url }}" target="_blank">
+                            Buka Video
+                        </a>
+                    {% endif %}
+
+                    {% if lesson.file_attachment %}
+                        <br>
+                        <a href="{{ lesson.file_attachment }}" target="_blank">
+                            Download Materi
+                        </a>
+                    {% endif %}
+
+                    <br>
+
+                    {% if lesson.completed %}
+                        <span class="completed">
+                            Selesai
+                        </span>
+
+                        <span class="muted">
+                            —
+                            {{ lesson.completed_at }}
+                        </span>
+                    {% else %}
+                        <span class="not-completed">
+                            Belum selesai
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div>
+                    {% if lesson.completed %}
+                        <form
+                            method="post"
+                            action="{% url 'dashboard_reset_lesson' lesson.id %}"
+                        >
+                            {% csrf_token %}
+                            <button class="button button-danger" type="submit">
+                                Reset
+                            </button>
+                        </form>
+                    {% else %}
+                        <form
+                            method="post"
+                            action="{% url 'dashboard_complete_lesson' lesson.id %}"
+                        >
+                            {% csrf_token %}
+                            <button class="button" type="submit">
+                                Tandai Selesai
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p class="empty">
+                Belum ada lesson pada course ini.
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section">
+    <a href="{% url 'student_dashboard' %}" class="button button-secondary">
+        Kembali ke Dashboard
+    </a>
+</div>
+
+{% endblock %}
