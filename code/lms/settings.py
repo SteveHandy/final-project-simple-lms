@@ -12,7 +12,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: jangan gunakan key ini di production!
-SECRET_KEY = "django-insecure-lab05-db-optimization-simple-lms-key-2025"
+# SECRET_KEY = "django-insecure-lab05-db-optimization-simple-lms-key-2025"
+SECRET_KEY = {
+    "JWT_PRIVATE_KEY_PATH": "jwt-signing.pem",
+    "JWT_PUBLIC_KEY_PATH": "jwt-signing.pub",
+}
 
 # SECURITY WARNING: matikan DEBUG di production!
 DEBUG = True
@@ -33,6 +37,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "silk",       # Django Silk - query profiling (Modul 05)
     "courses",    # Aplikasi Simple LMS kita
+    "users",
+    "enrollments",
+    "progress",
+    "dashboard",
+    "ninja_simple_jwt",
 ]
 
 
