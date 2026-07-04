@@ -1,11 +1,9 @@
 from django.db import models
-from django.utils import timezone
 
 from courses.models import CourseMember, CourseContent
 
 
 class Progress(models.Model):
-
     member = models.ForeignKey(
         CourseMember,
         on_delete=models.CASCADE,
@@ -15,29 +13,22 @@ class Progress(models.Model):
     lesson = models.ForeignKey(
         CourseContent,
         on_delete=models.CASCADE,
-        related_name="progress"
+        related_name="progress_records"
     )
 
-    completed = models.BooleanField(
-        default=False
-    )
+    completed = models.BooleanField(default=False)
 
     completed_at = models.DateTimeField(
         null=True,
         blank=True
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ("member", "lesson")
-        ordering = ["lesson"]
+        ordering = ["lesson__order", "lesson__id"]
 
     def __str__(self):
         status = "Completed" if self.completed else "Not Completed"

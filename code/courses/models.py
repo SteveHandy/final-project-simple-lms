@@ -110,19 +110,28 @@ class CourseContent(models.Model):
         null=True,
         blank=True
     )
-    file_attachment = models.FileField("File", null=True, blank=True)
+    file_attachment = models.FileField(
+        "File",
+        upload_to="courses/materials/",
+        null=True,
+        blank=True
+    )
+    order = models.PositiveIntegerField("urutan", default=0)
+
     course_id = models.ForeignKey(
         Course,
         verbose_name="matkul",
         on_delete=models.RESTRICT,
         related_name="contents"
     )
+
     parent_id = models.ForeignKey(
         "self",
         verbose_name="induk",
         on_delete=models.RESTRICT,
         null=True,
-        blank=True
+        blank=True,
+        related_name="children"
     )
 
     def __str__(self):
@@ -131,6 +140,7 @@ class CourseContent(models.Model):
     class Meta:
         verbose_name = "Konten Kelas"
         verbose_name_plural = "Konten Kelas"
+        ordering = ["course_id", "order", "id"]
 
 class CourseReview(models.Model):
     course = models.ForeignKey(

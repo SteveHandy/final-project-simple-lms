@@ -112,3 +112,15 @@ class CourseWishlistOut(Schema):
     user_id: int
     username: str
     created_at: datetime
+
+
+class CurriculumItemOut(Schema):
+    id: int
+    name: str
+    description: str
+    video_url: str | None = None
+    file_attachment: str | None = None
+    parent_id: int | None = None
+    parent_name: str | None = None
+    order: int
+    completed: bool = False

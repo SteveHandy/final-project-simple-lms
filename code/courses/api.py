@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from ninja.errors import HttpError
 
+from progress.models import Progress
 from .models import Category, Course, CourseReview, CourseWishlist, CourseMember, CourseContent
 from .schemas import (
     CourseOut,
@@ -16,7 +17,8 @@ from .schemas import (
     CourseWishlistOut,
     LessonCreate,
     LessonOut,
-    LessonUpdate
+    LessonUpdate,
+    CurriculumItemOut
 )
 from .schemas import EnrollmentCreate
 from .schemas import EnrollmentOut
@@ -562,4 +564,52 @@ def list_courses(
     return [
         serialize_course(course)
         for course in courses
+    ]
+
+@router.get(
+    "/{course_id}/curriculum",
+    response=list[CurriculumItemOut],
+    auth=auth
+)
+def course_curriculum(request, course_id: int):
+    course = get_object_or_404(Course, id=course_id)
+
+    member = CourseMember.objects.filter(
+        course_id=course,
+        user_id=request.auth
+    ).first()
+
+    progress_map = {}
+
+    if member:
+        progress_items = Progress.objects.filter(
+            member=member,
+            lesson__course_id=course
+        )
+
+        progress_map = {
+            item.lesson_id: item
+            for item in progress_items
+        }
+
+    contents = (
+        CourseContent.objects
+        .select_related("parent_id", "course_id")
+        .filter(course_id=course)
+        .order_by("parent_id__id", "order", "id")
+    )
+
+    return [
+        {
+            "id": item.id,
+            "name": item.name,
+            "description": item.description,
+            "video_url": item.video_url,
+            "file_attachment": item.file_attachment.url if item.file_attachment else None,
+            "parent_id": item.parent_id.id if item.parent_id else None,
+            "parent_name": item.parent_id.name if item.parent_id else None,
+            "order": item.order,
+            "completed": progress_map.get(item.id).completed if item.id in progress_map else False,
+        }
+        for item in contents
     ]
