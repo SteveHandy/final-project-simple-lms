@@ -248,8 +248,8 @@ GET /api/v1/dashboard
 | Role       | Username   | Password      |
 | ---------- | ---------- | ------------- |
 | Admin      | admin      | admin123      |
-| Instructor | instructor | instructor123 |
-| Student    | student    | student123    |
+| Instructor | instructor | instruktur123 |
+| Student    | student    | murid123      |
 
 ---
 

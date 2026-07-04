@@ -7,15 +7,10 @@ SECRET_KEY = {
     "JWT_PUBLIC_KEY_PATH": "jwt-signing.pub",
 }
 
-# SECURITY WARNING: matikan DEBUG di production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
-# =============================================================================
-# Aplikasi yang terdaftar
-# =============================================================================
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -33,10 +28,6 @@ INSTALLED_APPS = [
     "ninja_simple_jwt",
 ]
 
-
-# =============================================================================
-# Middleware
-# =============================================================================
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -69,13 +60,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "lms.wsgi.application"
 
-
-# =============================================================================
-# Database - PostgreSQL (sesuai docker-compose.yml)
-# =============================================================================
-# Berbeda dengan Lab-compliance yang menggunakan SQLite,
-# lab ini menggunakan PostgreSQL agar optimasi index terlihat nyata.
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -88,18 +72,8 @@ DATABASES = {
 }
 
 
-# =============================================================================
-# Django Silk - Konfigurasi Profiling
-# Akses dashboard di: http://localhost:8000/silk/
-# =============================================================================
-
 SILKY_PYTHON_PROFILER = True   # Aktifkan function-level profiling
 SILKY_META = True              # Track query Silk sendiri (untuk transparansi)
-
-
-# =============================================================================
-# Password validation
-# =============================================================================
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -109,19 +83,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# =============================================================================
-# Internationalization
-# =============================================================================
-
 LANGUAGE_CODE = "id"
 TIME_ZONE = "Asia/Jakarta"
 USE_I18N = True
 USE_TZ = True
-
-
-# =============================================================================
-# Static dan Media files
-# =============================================================================
 
 STATIC_URL = "static/"
 
@@ -129,3 +94,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = "/dashboard/student/"
+LOGOUT_REDIRECT_URL = "/accounts/login/"

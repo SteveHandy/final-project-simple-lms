@@ -5,7 +5,11 @@ from api import api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("silk/", include("silk.urls", namespace="silk")),
     path("api/", api.urls),
+
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("dashboard/", include("dashboard.urls")),
+
+    path("silk/", include("silk.urls", namespace="silk")),
     path("", include("courses.urls")),
 ]

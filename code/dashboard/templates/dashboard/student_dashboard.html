@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .navbar p {
+            margin: 6px 0 0;
+            color: #d1d5db;
+        }
+
+        .container {
+            padding: 30px 40px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-title {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .section {
+            margin-top: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 16px;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .course-body {
+            padding: 20px;
+        }
+
+        .course-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .course-meta {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e5e7eb;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .progress-wrapper {
+            background: #e5e7eb;
+            border-radius: 999px;
+            height: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            background: #2563eb;
+            height: 100%;
+        }
+
+        .progress-text {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .list-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .empty {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .logout {
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .stats,
+            .course-grid,
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>Student Dashboard</h1>
+    <p>
+        Halo, {{ request.user.username }} |
+        <a class="logout" href="/accounts/logout/">Logout</a>
+    </p>
+</div>
+
+<div class="container">
+
+    <div class="stats">
+        <div class="card">
+            <div class="card-title">Course Diikuti</div>
+            <div class="card-value">{{ total_courses }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Total Lesson</div>
+            <div class="card-value">{{ total_lessons }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Lesson Selesai</div>
+            <div class="card-value">{{ completed_lessons }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Rata-rata Progress</div>
+            <div class="card-value">{{ average_progress }}%</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Course Saya</h2>
+
+        <div class="course-grid">
+            {% for course in enrolled_courses %}
+                <div class="course-card">
+                    <div class="course-body">
+                        <div class="course-title">
+                            {{ course.course_name }}
+                        </div>
+
+                        <div class="course-meta">
+                            Pengajar: {{ course.teacher_name }}
+                        </div>
+
+                        <p>
+                            {{ course.description }}
+                        </p>
+
+                        <div>
+                            <span class="badge">{{ course.category_name }}</span>
+                            <span class="badge">{{ course.level }}</span>
+                            <span class="badge">{{ course.status }}</span>
+                        </div>
+
+                        <div class="progress-wrapper">
+                            <div
+                                class="progress-bar"
+                                style="width: {{ course.progress_percentage }}%;"
+                            ></div>
+                        </div>
+
+                        <div class="progress-text">
+                            {{ course.completed_lessons }} dari {{ course.total_lessons }} lesson selesai
+                            —
+                            {{ course.progress_percentage }}%
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty">Kamu belum mengikuti course apa pun.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section two-column">
+
+        <div class="card">
+            <h2>Lesson Terakhir Diselesaikan</h2>
+
+            {% for item in recent_completed_lessons %}
+                <div class="list-item">
+                    <strong>{{ item.lesson.name }}</strong><br>
+                    <small>
+                        Course: {{ item.lesson.course_id.name }}
+                    </small><br>
+                    <small>
+                        Selesai pada: {{ item.completed_at }}
+                    </small>
+                </div>
+            {% empty %}
+                <p class="empty">Belum ada lesson yang selesai.</p>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h2>Wishlist</h2>
+
+            {% for item in wishlist_items %}
+                <div class="list-item">
+                    <strong>{{ item.course.name }}</strong><br>
+                    <small>
+                        Pengajar: {{ item.course.teacher.username }}
+                    </small><br>
+                    <small>
+                        Harga: Rp {{ item.course.price }}
+                    </small>
+                </div>
+            {% empty %}
+                <p class="empty">Wishlist masih kosong.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="section two-column">
+
+        <div class="card">
+            <div class="card-title">Wishlist</div>
+            <div class="card-value">{{ wishlist_count }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Review Dibuat</div>
+            <div class="card-value">{{ review_count }}</div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
