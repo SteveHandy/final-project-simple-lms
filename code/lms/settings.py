@@ -1,18 +1,7 @@
-"""
-Django settings untuk Simple LMS - Lab 05: Optimasi Database
-
-Melanjutkan dari Modul 04 (Django ORM) dengan tambahan:
-- Database PostgreSQL (bukan SQLite)
-- Django Silk untuk query profiling
-- Media files untuk ImageField dan FileField
-"""
-
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: jangan gunakan key ini di production!
-# SECRET_KEY = "django-insecure-lab05-db-optimization-simple-lms-key-2025"
 SECRET_KEY = {
     "JWT_PRIVATE_KEY_PATH": "jwt-signing.pem",
     "JWT_PUBLIC_KEY_PATH": "jwt-signing.pub",
