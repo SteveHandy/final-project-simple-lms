@@ -138,7 +138,7 @@ Gunakan access token pada setiap request yang membutuhkan autentikasi.
 
 ---
 
-# 👥 Roles
+# Roles
 
 ## Admin
 
@@ -250,8 +250,6 @@ GET /api/v1/dashboard
 | Admin      | admin      | admin123      |
 | Instructor | instructor | instructor123 |
 | Student    | student    | student123    |
-
-> **Catatan:** Akun demo dapat dibuat menggunakan seed data.
 
 ---
 
