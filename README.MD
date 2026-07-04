@@ -66,13 +66,14 @@ Selain fitur dasar LMS, project ini mengimplementasikan **Paket 1 – LMS Experi
 Clone repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/SteveHandy/final-project-simple-lms.git
+
 ```
 
 Masuk ke folder project
 
 ```bash
-cd <project-folder>
+cd final-project-simple-lms
 ```
 
 Jalankan Docker
